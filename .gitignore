@@ -1,0 +1,38 @@
+# Django
+*.log
+*.pot
+*.pyc
+__pycache__/
+db.sqlite3
+media/
+staticfiles/
+
+# Backup files
+*.bak
+
+# Python
+*.py[cod]
+*$py.class
+.python-version
+.pytest_cache/
+.mypy_cache/
+
+# Environments
+.env
+.env.prod
+.venv/
+env/
+venv/
+ENV/
+
+# IDE
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# OS
+.DS_Store
+Thumbs.db
