@@ -2,8 +2,9 @@ from django.shortcuts import render, redirect
 from .models import SiteTheme
 from .forms import SiteThemeForm
 
+
+
 def theme_settings(request):
-    # Ambil tema yang ada, kalau belum ada buat baru dengan nilai default
     theme, created = SiteTheme.objects.get_or_create(pk=1)
 
     if request.method == 'POST':
@@ -15,3 +16,28 @@ def theme_settings(request):
         form = SiteThemeForm(instance=theme)
 
     return render(request, 'theme/settings.html', {'form': form, 'theme': theme})
+
+def theme_settings(request):
+    theme, created = SiteTheme.objects.get_or_create(pk=1)
+
+    if request.method == 'POST':
+        form = SiteThemeForm(request.POST, instance=theme)
+        if form.is_valid():
+            form.save()
+            return redirect('theme_settings')
+    else:
+        form = SiteThemeForm(instance=theme)
+
+    presets = {
+        'light': {'bg_color':'#eaf2ff', 'accent_color':'#0e5a64', 'text_color':'#1b2b5a', 'highlight_color':'#ffc107', 'surface_color':'#ffffff'},
+        'dark':  {'bg_color':'#1e2433', 'accent_color':'#4fc3f7', 'text_color':'#e8eaf6', 'highlight_color':'#ffd54f', 'surface_color':'#2a3045'},
+    }
+
+    current = {'bg_color': theme.bg_color, 'accent_color': theme.accent_color, 'text_color': theme.text_color, 'highlight_color': theme.highlight_color, 'surface_color': theme.surface_color}
+    active_preset = 'Custom'
+    for name, values in presets.items():
+        if values == current:
+            active_preset = name.title()
+            break
+
+    return render(request, 'theme/settings.html', {'form': form, 'theme': theme, 'active_preset': active_preset})
