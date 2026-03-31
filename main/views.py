@@ -1,5 +1,5 @@
-from django.http import HttpResponse
+from django.shortcuts import render
 
 
 def show_main(request):
-    return HttpResponse("Django base is running.")
+    return render(request, "main/home.html")
