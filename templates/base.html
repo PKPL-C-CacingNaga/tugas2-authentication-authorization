@@ -379,6 +379,16 @@
                 width: 100%;
             }
         }
+        
+        {% if theme %}
+        :root {
+            --bg: {{ theme.bg_color }};
+            --accent: {{ theme.accent_color }};
+            --text: {{ theme.text_color }};
+            --highlight: {{ theme.highlight_color }};
+            --surface: {{ theme.surface_color }};
+        }
+        {% endif %}
     </style>
 </head>
 <body>
