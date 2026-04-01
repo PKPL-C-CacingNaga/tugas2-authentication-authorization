@@ -1,23 +1,25 @@
 from django.shortcuts import render, redirect
 from .models import SiteTheme
 from .forms import SiteThemeForm
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 
 
 
+
+@login_required
 def theme_settings(request):
-    theme, created = SiteTheme.objects.get_or_create(pk=1)
-
-    if request.method == 'POST':
-        form = SiteThemeForm(request.POST, instance=theme)
-        if form.is_valid():
-            form.save()
-            return redirect('theme_settings')
-    else:
-        form = SiteThemeForm(instance=theme)
-
-    return render(request, 'theme/settings.html', {'form': form, 'theme': theme})
-
-def theme_settings(request):
+    WHITELIST_EMAILS = [
+        'a.anggara.bayuadji.p@gmail.com',
+        'aaronsuhaendi@gmail.com',
+        'rizkyantariksa02@gmail.com',
+        'samuelindriano@gmail.com',
+        'wildanhidayatirl@gmail.com',
+    ]
+    
+    if request.user.email not in WHITELIST_EMAILS:
+        raise PermissionDenied("Hanya anggota kelompoko CacingNaga yang dapat mengakses halaman ini.")
+    
     theme, created = SiteTheme.objects.get_or_create(pk=1)
 
     if request.method == 'POST':
