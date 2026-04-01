@@ -198,13 +198,26 @@
                 <button class="nav-link" type="button">Contact</button>
             </nav>
 
-            <button class="profile-button" type="button">
-                <span class="profile-avatar">P</span>
-                <span class="profile-meta">
-                    <strong>Public</strong>
-                    <span>Viewer Mode</span>
-                </span>
-            </button>
+            {% if user.is_authenticated %}
+            <form method="post" action="{% url 'account_logout' %}" style="display: inline;">
+                {% csrf_token %}
+                <button class="profile-button" type="submit">
+                    <span class="profile-avatar">{{ user.first_name|default:user.username|slice:":1"|upper }}</span>
+                    <span class="profile-meta">
+                        <strong>{{ user.first_name|default:user.username }}</strong>
+                        <span>Logout</span>
+                    </span>
+                </button>
+            </form>
+            {% else %}
+            {% load socialaccount %}
+            <form action="{% provider_login_url 'google' %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                <button class="profile-button" type="submit" style="padding: 8px 16px;">
+                    <strong>Login</strong>
+                </button>
+            </form>
+            {% endif %}
         </header>
 
         <div class="hero surface">
