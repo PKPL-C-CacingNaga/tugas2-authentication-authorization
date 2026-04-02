@@ -4,7 +4,10 @@ from django.views.generic import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('accounts/3rdparty/login/cancelled/', RedirectView.as_view(url='/', permanent=False)),
+    path('accounts/3rdparty/login/cancelled/', RedirectView.as_view(pattern_name='main:public_home', permanent=False)),
+    path('accounts/3rdparty/login/error/', RedirectView.as_view(pattern_name='main:public_home', permanent=False)),
+    path('accounts/social/login/cancelled/', RedirectView.as_view(pattern_name='main:public_home', permanent=False)),
+    path('accounts/social/login/error/', RedirectView.as_view(pattern_name='main:public_home', permanent=False)),
     path('accounts/', include('allauth.urls')),
     path('', include('main.urls')),
     path('settings/', include('theme.urls')),
