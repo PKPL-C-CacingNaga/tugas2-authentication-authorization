@@ -13,9 +13,9 @@ class SiteThemeForm(forms.ModelForm):
             'surface_color': forms.TextInput(attrs={'type': 'color'}),
         }
         labels = {
-            'bg_color': 'Warna Background',
-            'accent_color': 'Warna Aksen',
-            'text_color': 'Warna Teks',
-            'highlight_color': 'Warna Highlight',
-            'surface_color': 'Warna Surface/Card',
+            'bg_color': 'Background Color',
+            'accent_color': 'Accent Color',
+            'text_color': 'Text Color',
+            'highlight_color': 'Highlight Color',
+            'surface_color': 'Surface Color',
         }

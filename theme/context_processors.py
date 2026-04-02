@@ -1,7 +1,20 @@
 from .models import SiteTheme
 
+
+def _hex_to_rgb(value):
+    value = value.lstrip('#')
+    if len(value) != 6:
+        return 255, 255, 255
+    return tuple(int(value[i:i + 2], 16) for i in (0, 2, 4))
+
+
+def _is_dark_color(value):
+    red, green, blue = _hex_to_rgb(value)
+    luminance = (0.2126 * red + 0.7152 * green + 0.0722 * blue) / 255
+    return luminance < 0.5
+
+
 def site_theme(request):
-    from .models import SiteTheme
     theme, _ = SiteTheme.objects.get_or_create(pk=1)
     
     user_email = ""
@@ -23,6 +36,7 @@ def site_theme(request):
     
     return {
         'theme': theme,
-        'user_actual_email': user_email.lower(), # Gunakan variabel baru ini di HTML
-        'whitelist_emails': [e.lower() for e in whitelist]
+        'theme_mode': 'dark' if _is_dark_color(theme.bg_color) else 'light',
+        'user_actual_email': user_email.lower(),
+        'whitelist_emails': [e.lower() for e in whitelist],
     }

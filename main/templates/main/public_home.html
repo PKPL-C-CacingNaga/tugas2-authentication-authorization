@@ -1,25 +1,83 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block extra_styles %}
+<style>
+    .public-home-title {
+        white-space: nowrap;
+    }
+
+    .public-home-title span {
+        display: inline;
+        margin-left: 0.12em;
+    }
+
+    .member-photo-frame {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        margin-bottom: 20px;
+        overflow: hidden;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+    }
+
+    .member-photo {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+        object-position: center;
+    }
+
+    .member-photo-wildan {
+        object-position: 52% 46%;
+        transform: scale(1.1);
+    }
+
+    .member-meta {
+        display: grid;
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+
+    .member-meta h4 {
+        margin: 0;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-    <div class="hero surface">
-        <div class="hero-copy">
-            <span class="hero-kicker">Home Screen</span>
-            <h1 class="hero-title">Authentication <span>& Authorization</span></h1>
-            <p class="hero-text">
-                Kami adalah kelompok pengembang yang berfokus pada pembuatan sistem Autentikasi dan Otorisasi yang aman. 
-                Halaman ini memuat profil dan biodata publik dari masing-masing anggota kelompok yang berkontribusi dalam proyek ini.
-            </p>
-        </div>
+<div class="hero surface">
+    <div class="hero-copy">
+        <h1 class="hero-title public-home-title">Cacing<span>Naga</span></h1>
+        <p class="hero-text">
+            Cacing-Cacing, Naga-Naga.<br>
+            Ini adalah biodata anggota dari kelompok CacingNaga 🐉.
+        </p>
     </div>
+</div>
 
-    <div class="feature-strip">
-        {% for member in members %}
-        <div class="feature-item">
-            <span class="feature-index">{{ member.role }}</span>
-            <h3>{{ member.name }}</h3>
-            <h4>NPM: {{ member.npm }}</h4>
-            <p>{{ member.bio }}</p>
+<div class="feature-strip">
+    {% for member in members %}
+    <div class="feature-item">
+        <span class="feature-index">{{ member.role }}</span>
+        {% if member.photo %}
+        <div class="member-photo-frame">
+            <img
+                src="{% static member.photo %}"
+                alt="Foto {{ member.name }}"
+                class="member-photo{% if member.photo_class %} {{ member.photo_class }}{% endif %}"
+            >
         </div>
-        {% endfor %}
+        {% endif %}
+        <h3>{{ member.name }}</h3>
+        <div class="member-meta">
+            <h4>NPM: {{ member.npm }}</h4>
+            <h4>Program Studi: {{ member.prodi }}</h4>
+        </div>
+        <p>{{ member.bio }}</p>
     </div>
+    {% endfor %}
+</div>
 {% endblock %}

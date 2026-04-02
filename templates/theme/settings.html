@@ -1,135 +1,230 @@
 {% extends 'base.html' %}
 
-{% block content %}
-<div style="
-    background: var(--surface);
-    border: 1px solid var(--line);
-    box-shadow: var(--shadow);
-    border-radius: 18px;
-    padding: 42px;
-    max-width: 600px;
-    margin: 0 auto;
-">
-    <h2 style="
-        font-family: 'Fraunces', Georgia, serif;
-        font-size: 2rem;
-        letter-spacing: -0.03em;
+{% block extra_styles %}
+<style>
+    .theme-settings-card {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 42px;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+    }
+
+    .theme-settings-title {
         margin-bottom: 8px;
         color: var(--text);
-    ">Ubah Tampilan</h2>
-    <p style="color: var(--muted); font-size: 0.94rem; margin-bottom: 24px;">
-        Perubahan akan langsung tampil di seluruh halaman website.
-    </p>
+        font-family: "Fraunces", Georgia, serif;
+        font-size: 2rem;
+        letter-spacing: -0.03em;
+    }
 
-    <p style="font-size: 0.78rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px;">Preset Tema</p>
-    <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px;">
-        <button type="button" onclick="applyPreset('light')" id="btn-light" style="
-            display: flex; align-items: center; gap: 8px;
-            padding: 9px 16px; border-radius: 8px; cursor: pointer;
-            font-size: 0.85rem; font-weight: 700;
-            border: 1.5px solid var(--line);
-            background: var(--surface); color: var(--text);
-            transition: opacity 0.15s;
-        ">Light</button>
-        <button type="button" onclick="applyPreset('dark')" id="btn-dark" style="
-            display: flex; align-items: center; gap: 8px;
-            padding: 9px 16px; border-radius: 8px; cursor: pointer;
-            font-size: 0.85rem; font-weight: 700;
-            border: 1.5px solid var(--line);
-            background: var(--surface); color: var(--text);
-            transition: opacity 0.15s;
-        ">Dark</button>
-        <button type="button" onclick="applyCustom()" id="btn-custom" style="
-            display: flex; align-items: center; gap: 8px;
-            padding: 9px 16px; border-radius: 8px; cursor: pointer;
-            font-size: 0.85rem; font-weight: 700;
-            border: 1.5px solid var(--line);
-            background: var(--surface); color: var(--muted);
-        ">Custom</button>
-    </div>
-    <p style="font-size: 0.78rem; color: var(--muted); margin-bottom: 28px;">
-        Pilih preset, atau atur manual di bawah lalu simpan.
-    </p>
+    .theme-settings-section-label {
+        margin-bottom: 10px;
+        color: var(--muted);
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
 
-    <hr style="border: none; border-top: 1px solid var(--line); margin-bottom: 28px;">
+    .theme-settings-preset-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 8px;
+    }
 
-    <div style="
+    .theme-settings-preset-button {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 16px;
+        background: var(--surface);
+        color: var(--text);
+        border: 1.5px solid var(--line);
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 700;
+        transition: opacity 0.15s;
+    }
+
+    .theme-settings-preset-button.is-custom {
+        color: var(--muted);
+    }
+
+    .theme-settings-divider {
+        margin-bottom: 28px;
+        border: none;
+        border-top: 1px solid var(--line);
+    }
+
+    .theme-settings-active {
         display: flex;
         align-items: center;
         gap: 10px;
-        padding: 10px 16px;
-        border-radius: 8px;
-        background: var(--surface);
-        border: 1.5px solid var(--line);
         margin-bottom: 20px;
-        font-size: 0.85rem;
+        padding: 10px 16px;
+        background: var(--surface);
         color: var(--muted);
-    ">Tema yang digunakan: <strong style="color: var(--text); margin-left: 4px;">{{ active_preset }}</strong></div>
+        border: 1.5px solid var(--line);
+        border-radius: 8px;
+        font-size: 0.85rem;
+    }
 
-    <form method="post">
-        {% csrf_token %}
-        {% for field in form %}
-        <div style="margin-bottom: 20px;">
-            <label style="
-                display: block;
-                font-size: 0.88rem;
-                font-weight: 700;
-                color: var(--text);
-                margin-bottom: 8px;
-            ">{{ field.label }}</label>
-            <div style="display: flex; align-items: center; gap: 12px;">
-                {{ field }}
-                <span style="font-size: 0.82rem; color: var(--muted);" id="val-{{ field.name }}"></span>
-            </div>
+    .theme-settings-active strong {
+        margin-left: 4px;
+        color: var(--text);
+    }
+
+    .theme-settings-field {
+        margin-bottom: 20px;
+    }
+
+    .theme-settings-field label {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--text);
+        font-size: 0.88rem;
+        font-weight: 700;
+    }
+
+    .theme-settings-field-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .theme-settings-value {
+        color: var(--muted);
+        font-size: 0.82rem;
+    }
+
+    .theme-settings-submit {
+        margin-top: 12px;
+        padding: 12px 28px;
+        background: var(--accent);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.92rem;
+        font-weight: 700;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="theme-settings-card">
+        <h2 class="theme-settings-title">Theme Settings</h2>
+
+        <p class="theme-settings-section-label">Presets</p>
+        <div class="theme-settings-preset-list">
+            <button
+                type="button"
+                id="btn-light"
+                class="theme-settings-preset-button"
+                onclick="applyPreset('light')"
+            >
+                Light
+            </button>
+
+            <button
+                type="button"
+                id="btn-dark"
+                class="theme-settings-preset-button"
+                onclick="applyPreset('dark')"
+            >
+                Dark
+            </button>
+
+            <button
+                type="button"
+                id="btn-custom"
+                class="theme-settings-preset-button is-custom"
+                onclick="applyCustom()"
+            >
+                Custom
+            </button>
         </div>
-        {% endfor %}
 
-        <button type="submit" style="
-            margin-top: 12px;
-            padding: 12px 28px;
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-size: 0.92rem;
-            font-weight: 700;
-            cursor: pointer;
-        ">Simpan Perubahan</button>
-    </form>
-</div>
+        <hr class="theme-settings-divider">
 
+        <div class="theme-settings-active">
+            Active preset:
+            <strong>{{ active_preset }}</strong>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% for field in form %}
+                <div class="theme-settings-field">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    <div class="theme-settings-field-row">
+                        {{ field }}
+                        <span class="theme-settings-value" id="val-{{ field.name }}"></span>
+                    </div>
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="theme-settings-submit">
+                Save Changes
+            </button>
+        </form>
+    </div>
+{% endblock %}
+
+{% block extra_scripts %}
 <script>
     const PRESETS = {
-        light: { bg_color:'#eaf2ff', accent_color:'#0e5a64', text_color:'#1b2b5a', highlight_color:'#ffc107', surface_color:'#ffffff' },
-        dark:  { bg_color:'#1e2433', accent_color:'#4fc3f7', text_color:'#e8eaf6', highlight_color:'#ffd54f', surface_color:'#2a3045' },
+        light: {
+            bg_color: "#eaf2ff",
+            accent_color: "#0e5a64",
+            text_color: "#1b2b5a",
+            highlight_color: "#ffc107",
+            surface_color: "#ffffff",
+        },
+        dark: {
+            bg_color: "#101b2d",
+            accent_color: "#2b8c93",
+            text_color: "#edf3ff",
+            highlight_color: "#d8b15a",
+            surface_color: "#18253a",
+        },
     };
 
     function setPickersDisabled(disabled) {
-        document.querySelectorAll('input[type="color"]').forEach(input => {
-            input.style.pointerEvents = disabled ? 'none' : 'auto';
-            input.style.opacity = disabled ? '0.4' : '1';
-            input.style.cursor = disabled ? 'not-allowed' : 'pointer';
+        document.querySelectorAll('input[type="color"]').forEach((input) => {
+            input.style.pointerEvents = disabled ? "none" : "auto";
+            input.style.opacity = disabled ? "0.4" : "1";
+            input.style.cursor = disabled ? "not-allowed" : "pointer";
         });
     }
 
     function setActiveBtn(name) {
-        document.querySelectorAll('[id^="btn-"]').forEach(b => {
-            b.style.borderColor = 'var(--line)';
-            b.style.color = 'var(--text)';
+        document.querySelectorAll('[id^="btn-"]').forEach((button) => {
+            button.style.borderColor = "var(--line)";
+            button.style.color = button.id === "btn-custom" ? "var(--muted)" : "var(--text)";
         });
-        const activeBtn = document.getElementById('btn-' + name);
+
+        const activeBtn = document.getElementById("btn-" + name);
         if (activeBtn) {
-            activeBtn.style.borderColor = 'var(--accent)';
-            activeBtn.style.color = 'var(--accent)';
+            activeBtn.style.borderColor = "var(--accent)";
+            activeBtn.style.color = "var(--accent)";
         }
     }
 
     function applyPreset(name) {
-        const p = PRESETS[name];
-        if (!p) return;
-        Object.entries(p).forEach(([field, value]) => {
+        const preset = PRESETS[name];
+        if (!preset) return;
+
+        Object.entries(preset).forEach(([field, value]) => {
             const input = document.querySelector(`input[name="${field}"]`);
-            const label = document.getElementById('val-' + field);
+            const label = document.getElementById("val-" + field);
+
             if (input) input.value = value;
             if (label) label.textContent = value;
         });
@@ -138,32 +233,41 @@
     }
 
     function applyCustom() {
-        setActiveBtn('custom');
+        setActiveBtn("custom");
         setPickersDisabled(false);
     }
 
-    document.querySelectorAll('input[type="color"]').forEach(input => {
-        const label = document.getElementById('val-' + input.name);
-        if (label) label.textContent = input.value;
-        input.addEventListener('input', () => {
-            if (label) label.textContent = input.value;
+    document.querySelectorAll('input[type="color"]').forEach((input) => {
+        const label = document.getElementById("val-" + input.name);
+
+        if (label) {
+            label.textContent = input.value;
+        }
+
+        input.addEventListener("input", () => {
+            if (label) {
+                label.textContent = input.value;
+            }
         });
     });
 
     (function detectActivePreset() {
         const current = {};
-        document.querySelectorAll('input[type="color"]').forEach(input => {
+
+        document.querySelectorAll('input[type="color"]').forEach((input) => {
             current[input.name] = input.value;
         });
+
         for (const [name, preset] of Object.entries(PRESETS)) {
-            const match = Object.entries(preset).every(([k, v]) => current[k] === v);
+            const match = Object.entries(preset).every(([key, value]) => current[key] === value);
+
             if (match) {
                 setActiveBtn(name);
                 setPickersDisabled(true);
                 return;
             }
         }
-        setActiveBtn('custom');
+        setActiveBtn("custom");
         setPickersDisabled(false);
     })();
 </script>

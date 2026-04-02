@@ -32,7 +32,7 @@ def theme_settings(request):
 
     presets = {
         'light': {'bg_color':'#eaf2ff', 'accent_color':'#0e5a64', 'text_color':'#1b2b5a', 'highlight_color':'#ffc107', 'surface_color':'#ffffff'},
-        'dark':  {'bg_color':'#1e2433', 'accent_color':'#4fc3f7', 'text_color':'#e8eaf6', 'highlight_color':'#ffd54f', 'surface_color':'#2a3045'},
+        'dark':  {'bg_color':'#101b2d', 'accent_color':'#2b8c93', 'text_color':'#edf3ff', 'highlight_color':'#d8b15a', 'surface_color':'#18253a'},
     }
 
     current = {'bg_color': theme.bg_color, 'accent_color': theme.accent_color, 'text_color': theme.text_color, 'highlight_color': theme.highlight_color, 'surface_color': theme.surface_color}
