@@ -324,18 +324,20 @@
             </nav>
 
             {% if user.is_authenticated %}
-                <form method="post" action="{% url 'account_logout' %}" style="display: inline;">
-                    {% csrf_token %}
-                    <button class="profile-button" type="submit">
-                        <span class="profile-avatar">
-                            {{ user.first_name|default:user.username|slice:":1"|upper }}
-                        </span>
-                        <span class="profile-meta">
-                            <strong>{{ user.first_name|default:user.username }}</strong>
-                            <span>Logout</span>
-                        </span>
-                    </button>
-                </form>
+            <form method="post" action="{% url 'account_logout' %}" style="display: inline;">
+                {% csrf_token %}
+                <button class="profile-button" type="submit">
+                    {% if user.socialaccount_set.all.0.get_avatar_url %}
+                    <img src="{{ user.socialaccount_set.all.0.get_avatar_url }}" class="profile-avatar" style="object-fit: cover; border: none; padding: 0;" alt="Avatar">
+                    {% else %}
+                    <span class="profile-avatar">{{ user.get_full_name|default:user.username|slice:":1"|upper }}</span>
+                    {% endif %}
+                    <span class="profile-meta">
+                        <strong>{{ user.get_full_name|default:user.username }}</strong>
+                        <span>Logout</span>
+                    </span>
+                </button>
+            </form>
             {% else %}
                 {% load socialaccount %}
                 <form action="{% provider_login_url 'google' %}" method="post" style="display: inline;">
