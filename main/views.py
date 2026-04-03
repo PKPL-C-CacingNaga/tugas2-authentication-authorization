@@ -7,7 +7,7 @@ def public_home(request):
             'npm': '2406400524',
             'prodi': 'Ilmu Komputer',
             'role': 'Project Integration & Base Setup',
-            'bio': 'Bertanggung jawab atas base project, integrasi final, merapikan routing dan base template, serta membereskan conflict dan testing flow akhir.',
+            'bio': 'Bertanggung jawab atas penyusunan base project, integrasi awal, perapihan routing dan base template, serta pengujian alur utama aplikasi.',
             'photo': 'main/images/samuel-indriano.jpeg',
         },
         {
