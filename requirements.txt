@@ -1,3 +1,6 @@
-django>=5.2,<5.3
-django-allauth>=0.61.0
-python-dotenv>=1.0.0
+Django==5.2.12
+django-allauth==65.15.1
+python-dotenv==1.2.2
+PyJWT==2.12.1
+cryptography==46.0.6
+requests==2.33.1
